@@ -32,14 +32,14 @@ class JikanSearcher():
             link = anime['url']
             title = anime['title']
 
-            description = '# ' + title + '\n'
+            description = '# ' + title + '\n' + '\n'
             genresStr = "Genres: " + self.get_genre_names_list_str(anime)
             description += self.boldifyText(genresStr) + '\n'
 
             if detailed:
-                synopsis_str = "Synopsis: " + anime['synopsis'] + '\n'
-                rating_str = f"Score: {anime['score']}, rated by {anime['scored_by']} users\n"
-                description += synopsis_str + rating_str
+                synopsis_str = "**Synopsis:** " + anime['synopsis'] + '\n'
+                rating_str = f"**Score:** {anime['score']}, rated by {anime['scored_by']} users\n"
+                description += synopsis_str + '\n' + rating_str
 
             embed = discord.Embed(title=link, description=description)
             embed.set_image(url=imageUrl)
