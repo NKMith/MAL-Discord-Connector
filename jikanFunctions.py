@@ -1,18 +1,16 @@
 from jikanpy import Jikan
 import discord
 
-"""
-"" outside
-'' inside
-"""
-
-
 class JikanSearcher():
+    """
+    The 'main' class of MAL-Discord connector
+    Uses JikanPy to search animes on MAL
+    """
     
     def __init__(self):
         self.jk = Jikan()
     
-    def search_getAnimes(self, searchName :str, resNum=3, detailed=False):
+    def search_getAnimes(self, searchName :str, resNum=3, detailed=False) -> discord.Embed:
         """
         Search MAL with inputted name
         Returns a list of 3 discord.Embed that each correspond to results of search
@@ -20,6 +18,8 @@ class JikanSearcher():
             url
             TITLE (Big text)
             Genre (Bolded)
+            Synopsis (if detailed=True)
+            Score (if detailed=True)
             large_image
         """
         search_results = self.jk.search('anime', searchName)["data"] # TODO - raise errors
@@ -28,13 +28,13 @@ class JikanSearcher():
 
         for i in range(resNum):
             anime = search_results[i]
-            imageUrl = self.grabLargeImage(anime)
+            imageUrl = self.grab_large_image(anime)
             link = anime['url']
             title = anime['title']
 
-            description = '# ' + title + '\n' + '\n'
-            genresStr = "Genres: " + self.get_genre_names_list_str(anime)
-            description += self.boldifyText(genresStr) + '\n'
+            description = f"# {title}" + '\n' + '\n'
+            genresStr = f"**Genres: {self.get_genre_names_list_str(anime)}**\n"
+            description += genresStr + '\n'
 
             if detailed:
                 synopsis_str = "**Synopsis:** " + anime['synopsis'] + '\n'
@@ -48,42 +48,26 @@ class JikanSearcher():
 
         return embedList
     
-    #https://discordpy.readthedocs.io/en/stable/faq.html#local-image
-    def grabSmallImage(self, anime):
+
+    def grab_small_image(self, anime):
         imgUrl = anime["images"]["jpg"]["small_image_url"]
         return imgUrl
     
-    def grabLargeImage(self, anime):
+    def grab_large_image(self, anime):
         imgUrl = anime["images"]["jpg"]["large_image_url"]
         return imgUrl
-            
-    def getGenreNamesList(self, anime):
-        lst = []
-        for genre in anime["genres"]:
-            lst.append(genre["name"])
-        return lst
     
-    def get_genre_names_list_str(self, anime):
-        lst = self.getGenreNamesList(anime)
+    def get_genre_names_list_str(self, anime) -> str:
+        "Given an anime, returns a string of its genres"
+        lst = self.get_genre_names_list(anime)
         toRet = lst[0]
         for i in range(1, len(lst)):
             toRet += ", " + lst[i]
         return toRet
-
     
-    def boldifyText(self, txt :str):
-        return "**" + txt + "**"
-
-    
-
-
-# Function for briefly testing things
-def main():
-    jkS = JikanSearcher()
-    jk = Jikan()
-
-    res = jk.search(search_type='anime', query='gundam')
-    #print(res)
-    print(jkS.get_genre_names_list_str(res['data'][0]))
-
-#main()
+    def get_genre_names_list(self, anime) -> list:
+        "Given an anime, returns a Python list of genres it has"
+        lst = []
+        for genre in anime["genres"]:
+            lst.append(genre["name"])
+        return lst

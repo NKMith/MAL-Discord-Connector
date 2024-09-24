@@ -1,7 +1,3 @@
-""" 
-Author: NKMith
-
-"""
 from env import *
 
 import discord
@@ -20,26 +16,29 @@ async def on_ready():
 async def test_respond(ctx :discord.ext.commands.Context):
     print(f"Ohayo ohayo ohayo yo")
 
-searchAnimeDescription = "Search anime on Mal, specify how many animes you want optionally (eg. searchAnime 'Vivy' ; searchAnime 'Vivy' 3)"
-@bot.command(name="searchAnime", description=searchAnimeDescription)
-async def simple_search(ctx :commands.Context, search_name, searchNumber=3):
+
+searchAnimeDescription = "Search anime on Mal, optionally specify how many (eg. searchAnime 'JJK' 3)"
+@bot.command(name="search-anime", description=searchAnimeDescription)
+async def simple_search(ctx :commands.Context, search_name, search_number=3):
     """
     Get top 3 search match results using an anime title
     """
-    if searchNumber > 10:
-        await ctx.channel.send("I can only search upto 10 animes at once.")
-        return
     if search_name == None:
         await ctx.channel.send("Give me a name to search!")
         return
+    if search_number > 10:
+        await ctx.channel.send("I can only search upto 10 animes at once.")
+        return
     jkSearcher = jikanFunctions.JikanSearcher()
-    lstOfEmbeds = jkSearcher.search_getAnimes(search_name, searchNumber)
+    lstOfEmbeds = jkSearcher.search_getAnimes(search_name, search_number)
 
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
 
+
+
 searchAnime_d_Description = "Get detailed information about the top search result using anime name (d stands for detailed)"
-@bot.command(name="searchAnime_d")
+@bot.command(name="search-anime_d", description=searchAnime_d_Description)
 async def detailed_search(ctx :commands.Context, search_name):
     """
     Get the top search match results using an anime title
@@ -53,7 +52,5 @@ async def detailed_search(ctx :commands.Context, search_name):
     lstOfEmbeds = jkSearcher.search_getAnimes(search_name, 1, True)
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
-
-
 
 bot.run(BOT_TOKEN)
