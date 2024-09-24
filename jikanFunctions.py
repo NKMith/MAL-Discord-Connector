@@ -11,23 +11,12 @@ class JikanSearcher():
     
     def __init__(self):
         self.jk = Jikan()
-
-
-    #https://discordpy.readthedocs.io/en/stable/faq.html#local-image
-    def grabSmallImage(self, anime):
-        imgUrl = anime["images"]["jpg"]["small_image_url"]
-        return imgUrl
     
-    def grabLargeImage(self, anime):
-        imgUrl = anime["images"]["jpg"]["large_image_url"]
-        return imgUrl
-
-    
-    def search_get3anime(self, searchName :str):
+    def search_getAnimes(self, searchName :str, resNum=3, detailed=False):
         """
         Search MAL with inputted name
         Returns a list of 3 discord.Embed that each correspond to results of search
-        Eahc discord.Embed has format of:
+        Each discord.Embed has format of:
             url
             TITLE (Big text)
             Genre (Bolded)
@@ -37,25 +26,37 @@ class JikanSearcher():
 
         embedList = []
 
-        for i in range(3):
+        for i in range(resNum):
             anime = search_results[i]
             imageUrl = self.grabLargeImage(anime)
             link = anime['url']
             title = anime['title']
 
-            txt = '# ' + title + '\n'
-
+            description = '# ' + title + '\n'
             genresStr = "Genres: " + self.get_genre_names_list_str(anime)
-            txt += self.boldifyText(genresStr) + '\n'
+            description += self.boldifyText(genresStr) + '\n'
 
-            embed = discord.Embed(title=link, description=txt)
+            if detailed:
+                synopsis_str = "Synopsis: " + anime['synopsis'] + '\n'
+                rating_str = f"Score: {anime['score']}, rated by {anime['scored_by']} users\n"
+                description += synopsis_str + rating_str
+
+            embed = discord.Embed(title=link, description=description)
             embed.set_image(url=imageUrl)
             
             embedList.append(embed)
 
         return embedList
+    
+    #https://discordpy.readthedocs.io/en/stable/faq.html#local-image
+    def grabSmallImage(self, anime):
+        imgUrl = anime["images"]["jpg"]["small_image_url"]
+        return imgUrl
+    
+    def grabLargeImage(self, anime):
+        imgUrl = anime["images"]["jpg"]["large_image_url"]
+        return imgUrl
             
-
     def getGenreNamesList(self, anime):
         lst = []
         for genre in anime["genres"]:
@@ -86,19 +87,3 @@ def main():
     print(jkS.get_genre_names_list_str(res['data'][0]))
 
 #main()
-
-# Format:
-# (search number) Title
-# URL
-# Image
-# Synopsis (...)
-# Rating
-
-
-# Format:
-# URL (as embed header)
-# ## TITLE
-# Image
-# **Genre: [..]**
-# Synopsis
-# Rating
