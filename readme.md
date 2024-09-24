@@ -1,7 +1,10 @@
 # MAL-Discord Connector
 
-MAL-Discord Connector allows you to search animes on MAL (MyAnimeList) on Discord using simple. commands
+MAL-Discord Connector is a Discord bot that allows you to search animes on MAL (MyAnimeList) on Discord using simple commands.  
+  
+This project uses JikanPy(https://github.com/abhinavk99/jikanpy).  
 
+This project on GitHub is missing a file called "env.py", which contains the BOT_TOKEN (essentially a password for the bot).  
 
 ## /search-anime "anime name" (+optional: number of results to retrieve)
 eg. /search-anime JJK  
