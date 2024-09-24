@@ -17,32 +17,39 @@ class JikanSearcher():
     def grabSmallImage(self, anime):
         imgUrl = anime["images"]["jpg"]["small_image_url"]
         return imgUrl
-
-
-    def searchOne(self, searchName :str):
-        search_result = self.jk.search('anime', searchName) # TODO - raise errors
-        return search_result["data"][0]
     
-    def simpleSearch3(self, searchName :str):
+    def grabLargeImage(self, anime):
+        imgUrl = anime["images"]["jpg"]["large_image_url"]
+        return imgUrl
+
+    
+    def search_get3anime(self, searchName :str):
         """
         Search MAL with inputted name
-        Give out top 3 results
+        Returns a list of 3 discord.Embed that each correspond to results of search
+        Eahc discord.Embed has format of:
+            url
+            TITLE (Big text)
+            Genre (Bolded)
+            large_image
         """
-        search_results = self.jk.search('anime', searchName) # TODO - raise errors
+        search_results = self.jk.search('anime', searchName)["data"] # TODO - raise errors
 
         embedList = []
 
         for i in range(3):
             anime = search_results[i]
-            imageUrl = self.grabSmallImage(anime)
+            imageUrl = self.grabLargeImage(anime)
             link = anime['url']
             title = anime['title']
 
             txt = '# ' + title + '\n'
-            txt += self.boldifyText(self.get_genre_names_list_str(anime)) + '\n'
 
-            embed = discord.Embed(title=link)
-            embed.set_image(imageUrl)
+            genresStr = "Genres: " + self.get_genre_names_list_str(anime)
+            txt += self.boldifyText(genresStr) + '\n'
+
+            embed = discord.Embed(title=link, description=txt)
+            embed.set_image(url=imageUrl)
             
             embedList.append(embed)
 
@@ -63,16 +70,9 @@ class JikanSearcher():
         return toRet
 
     
-    def boldifyText(txt :str):
+    def boldifyText(self, txt :str):
         return "**" + txt + "**"
 
-
-
-
-    def get_formatted_str(self, anime :dict):
-        toRet = f"## TITLE: {anime['title']}\n"
-        toRet += f"# Synopsis: {anime['synopsis']}"
-        return toRet
     
 
 
