@@ -1,4 +1,4 @@
-#MAL-Discord Connector
+# MAL-Discord Connector
 
 MAL-Discord Connector allows you to search animes on MAL (MyAnimeList) on Discord using simple commands
 
