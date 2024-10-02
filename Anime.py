@@ -7,6 +7,10 @@ class Anime():
         self.large_image_url = animedict['images']['jpg']['large_image_url']
         self.genrenames :list = self.get_genre_list()
 
+        self.score = animedict['score']
+        self.scored_by = animedict['scored_by']
+        self.synopsis = animedict['synopsis']
+
     def get_genre_list(self) -> list:
         """Given an anime, returns a Python list of genres it has"""
         lst = []
@@ -19,6 +23,9 @@ class Anime():
         PRE: self.strgenres isn't empty
         Given an anime, returns a string of its genres nice to print
         """
+        if len(self.genrenames) == 0:
+            print("There is no genre")
+            return ""
         toRet = self.genrenames[0]
         for i in range(1, len(self.genrenames)):
             toRet += ", " + self.genrenames[i]

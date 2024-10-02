@@ -11,6 +11,15 @@ class Discord_MAL_Connector():
         self.limit = limit
 
     def get_discord_embeds(self) -> list:
+        """
+        Each discord.Embed has format of:
+            url
+            TITLE (Big text)
+            Genre (Bolded)
+            Synopsis (if detailed=True)
+            Score (if detailed=True)
+            large_image
+        """
         list_of_animes = self.get_animes()
         list_of_embeds = []
         for i in range(self.limit):

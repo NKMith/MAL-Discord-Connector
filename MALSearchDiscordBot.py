@@ -30,8 +30,8 @@ async def simple_search(ctx :commands.Context, search_name, search_number=3):
     if search_number > 10:
         await ctx.channel.send("I can only search upto 10 animes at once.")
         return
-    jkSearcher = jikanFunctions.JikanSearcher()
-    lstOfEmbeds = jkSearcher.search_getAnimes(search_name, search_number)
+    jkSearcher = jikanFunctions.AnimeSearcher(search_name, False, search_number)
+    lstOfEmbeds = jkSearcher.get_discord_embeds()
 
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
@@ -49,14 +49,14 @@ async def detailed_search(ctx :commands.Context, search_name):
         await ctx.channel.send("Give me a name to search!")
         return
     
-    jkSearcher = jikanFunctions.JikanSearcher()
+    jkSearcher = jikanFunctions.AnimeSearcher()
     lstOfEmbeds = jkSearcher.search_getAnimes(search_name, 1, True)
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
 
 
 @bot.command(name="share-anime-list")
-async def shareAnimeList(ctx :commands.Context, username):
+async def share_anime_list(ctx :commands.Context, username, limit = 3):
     """
     Get the top search match results using an anime title
     Show detailed information about it
@@ -65,8 +65,8 @@ async def shareAnimeList(ctx :commands.Context, username):
         await ctx.channel.send("Give me a username to search!")
         return
     
-    sharer = userAnimeListShare.userAnimeListShare(username)
-    lstOfEmbeds = sharer.get_embeds()
+    sharer = userAnimeListShare.UserAnimeListSharer(username, limit)
+    lstOfEmbeds = sharer.get_discord_embeds()
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
 
