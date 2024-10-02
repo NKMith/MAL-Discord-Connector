@@ -2,6 +2,7 @@ from env import *
 
 import discord
 import jikanFunctions
+import userAnimeListShare
 from discord.ext import commands
 
 
@@ -50,6 +51,22 @@ async def detailed_search(ctx :commands.Context, search_name):
     
     jkSearcher = jikanFunctions.JikanSearcher()
     lstOfEmbeds = jkSearcher.search_getAnimes(search_name, 1, True)
+    for embed in lstOfEmbeds:
+        await ctx.channel.send(embed=embed)
+
+
+@bot.command(name="share-anime-list")
+async def shareAnimeList(ctx :commands.Context, username):
+    """
+    Get the top search match results using an anime title
+    Show detailed information about it
+    """
+    if username == None:
+        await ctx.channel.send("Give me a username to search!")
+        return
+    
+    sharer = userAnimeListShare.userAnimeListShare(username)
+    lstOfEmbeds = sharer.get_embeds()
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
 
