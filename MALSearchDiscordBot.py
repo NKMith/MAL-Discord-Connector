@@ -49,8 +49,8 @@ async def detailed_search(ctx :commands.Context, search_name):
         await ctx.channel.send("Give me a name to search!")
         return
     
-    jkSearcher = jikanFunctions.AnimeSearcher()
-    lstOfEmbeds = jkSearcher.search_getAnimes(search_name, 1, True)
+    jkSearcher = jikanFunctions.AnimeSearcher(search_name, True, 1)
+    lstOfEmbeds = jkSearcher.get_discord_embeds()
     for embed in lstOfEmbeds:
         await ctx.channel.send(embed=embed)
 
